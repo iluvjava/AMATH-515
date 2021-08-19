@@ -1,0 +1,278 @@
+\documentclass[]{article}
+\usepackage{amsmath}\usepackage{amsfonts}
+\usepackage[margin=1in,footskip=0.25in]{geometry}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+\usepackage[final]{graphicx}
+
+% \usepackage{wrapfig}
+\graphicspath{{.}}
+
+\begin{document}
+\hspace{-1.8em}
+Name: Hongda Li
+\\
+Class: AMATH 515
+
+\section*{Problem (1)}
+    \textbf{Objective:} Prove the identity for $\alpha \in \mathbb{R}$:
+    $$
+        \left\Vert
+            \alpha x + (1 - \alpha)y
+        \right\Vert^2 + \alpha(1 - \alpha)\left\Vert
+            x - y
+        \right\Vert^2 = \alpha\left\Vert
+            x
+        \right\Vert^2 +(1 - \alpha)\left\Vert
+            y
+        \right\Vert^2
+    $$
+    Compute it directly from left to right: 
+    \begin{align*}\tag{1}\label{eqn:1}
+    &\left\Vert
+        \alpha x + (1 - \alpha)y
+    \right\Vert^2
+    + 
+    \alpha(1- \alpha) \left\Vert
+        x - y
+    \right\Vert
+    \\
+    & \alpha^2 \left\Vert
+        x
+    \right\Vert^2 
+    + 
+    (1 - \alpha)^2 \left\Vert
+        y
+    \right\Vert^2
+    +
+    2\alpha(1 - \alpha)x^Ty + \alpha(1 - \alpha)(\left\Vert
+        x
+    \right\Vert^2 + \left\Vert
+            y
+    \right\Vert^2 - 2x^Ty)
+    \\
+    &= 
+    \Vert x\Vert^2((\alpha^2 + \alpha(1 - \alpha)) 
+    + 
+    \Vert y\Vert^2 ((1 - \alpha)^2 + \alpha(1 - \alpha))
+    + 
+    x^Ty(2\alpha(1 - \alpha) - 2\alpha(1 - \alpha))
+    \\
+    &= 
+    \Vert x\Vert^2(\alpha^2 + \alpha - \alpha^2) 
+    + 
+    \Vert y\Vert^2 ((1 - \alpha^2)+ \alpha - \alpha^2)
+    + 
+    x^Ty(0)
+    \\
+    &=\alpha \Vert x\Vert^2 + (1 - \alpha)\Vert y\Vert^2
+    \end{align*}
+\section*{Problem (2)}
+    \subsection*{(a)}
+        \textbf{Objective: }Show that $T_\lambda$ and $T$ has the same fixed points. $x$ is a fixed point of the non-expansive operator $T$ if $x \in Tx$, then we want to show that picking any $x\in Tx\implies x\in T_\lambda x$
+        \\
+        $T_\lambda$ is defined to be: $T_\lambda:= (1 - \lambda)I - \lambda T$. 
+        \\
+        Consider: 
+        \begin{align*}\tag{2a1}\label{eqn:2a1}
+        T_\lambda(Tx) 
+        &= (1 - \lambda)Tx + \lambda Tx
+        \\
+        &= Tx - \lambda Tx + \lambda Tx
+        \\
+        &=Tx
+        \end{align*}
+        If $x$ is a fixed for for $T$, then $x \in Tx$ which means $T_\lambda(Tx) \implies T_\lambda(x) = Tx $ for any $x$ so $x = T_\lambda(x)$.
+    \subsection*{(b)}
+        \textbf{Objective:} With that assumption that $\bar{z}$ is the fixed point of the operator $T$, show that: 
+        $$
+            \Vert T_\lambda z - \bar{z}\Vert^2 
+            \le
+            \Vert z - \bar{z}\Vert^2 
+            -
+            \lambda(1 - \lambda) \Vert z - Tz\Vert^2
+        $$
+        Because of fixed points we know that $\Vert T_\lambda z - \bar{z}\Vert = \Vert T_\lambda(z - \bar{z})\Vert$ then by definition of the $T_\lambda$: 
+        \begin{align*}\tag{1b1}\label{eqn:1b1}
+            \Vert T_\lambda(z - \bar{z}) \Vert^2
+            &= 
+            \Vert (1 - \lambda)
+                \underbrace{(z - \bar{z})}_{y} + \lambda 
+                \underbrace{T(z - \bar{z})}_{x}
+            \Vert^2
+            \\
+            &= \Vert (1 - \lambda)y + \lambda x \Vert^2
+            \\
+            \underset{\text{Using Problem 1}}{\implies}
+            &= - \lambda(1 - \lambda) \Vert x - y\Vert^2 + \lambda \Vert x\Vert^2 + (1 - \lambda)\Vert y\Vert^2
+        \end{align*}
+        Let's pause for a moment and consider: 
+        \begin{align*}\tag{2b2}\label{eqn:2b2}
+            y - x &= z - \bar{z} - T(z - \bar{z})
+            \\ 
+            &=z - \bar{z} - Tz - T\bar{z} 
+            \\
+            &= z - \bar{z} - Tz - \bar{z} 
+            \\
+            &= z - T(z)
+        \end{align*}
+        Let's continue on latest step from \hyperref[eqn:1b1]{1b1}: 
+        \begin{align*}\tag{1b3}\label{eqn:1b3}
+            \Vert T_\lambda z - \bar{z}\Vert^2
+            &=-\lambda(1 - \lambda) \Vert z - Tz\Vert^2 
+            + 
+            \lambda \Vert x\Vert^2 + (1 - \lambda)\Vert y\Vert^2
+            \\
+            &= 
+            -\lambda(1 - \lambda) \Vert z - Tz\Vert^2 
+            + 
+            \underbrace{\lambda \Vert T(z - \bar{z})\Vert^2}_{\le\lambda \Vert z - \bar{z}\Vert}
+            + (1 - \lambda)
+            \Vert z - \bar{z}\Vert^2
+            \\
+            &\le 
+            -\lambda(1 - \lambda) \Vert z - Tz\Vert^2 
+            + \lambda \Vert z - \bar{z}\Vert^2 + (1 - \lambda)\Vert z - \bar{z}\Vert^2
+            \\
+            &= 
+            \Vert z - \bar{z}\Vert^2 -\lambda(1 - \lambda) \Vert z - Tz\Vert^2 
+        \end{align*}
+        It has been shown. 
+\section*{Problem (3)}
+    \subsection*{(a)}
+        \textbf{Objective: } If $T$ is a firmly non-expansive operator, then we want to show that: 
+        $$
+            \Vert Tx - Ty\Vert^2
+            + \Vert (I - T)x - (I - T)y\Vert^2
+            \le \Vert x - y\Vert^2
+            \iff
+            \langle x- y, Tx - Ty\rangle \ge 
+            \Vert Tx - Ty\Vert^2
+        $$
+        Let's focus on one of the terms that is one the LHS: 
+        \begin{align*}\tag{3a1}\label{eqn:3a1}
+            &=\Vert (I - T)x - (I - T)y\Vert^2 
+            \\
+            &=\Vert x - Tx - y + Ty\Vert^2
+            \\
+            &= \Vert x - Tx - y + Ty\Vert^2
+            \\
+            &=
+            \Vert x - y + Ty - Tx\Vert^2
+        \end{align*}
+        Now, notice that I can move this term to the RHS to the definition of the non-expansive operator, and then we will have: 
+        \begin{align*}\tag{3a2}\label{eqn:3a2}
+            &\Vert x - y\Vert^2 - \Vert (x - y) - (Ty - Tx)\Vert^2
+            \\
+            &= 
+            \Vert x - y\Vert^2 - \left\lbrack
+                \Vert x - y\Vert^2
+                + 
+                \Vert Ty - Tx\Vert^2
+                + 
+                2(x - y)^T(Ty - Tx)
+            \right\rbrack
+            \\
+            &= 
+            -\Vert Ty - Tx\Vert^2 - 2(x - y)^T(Ty - Tx)
+        \end{align*}
+        So then, we have the expression: 
+        \begin{align*}\tag{3a3}\label{eqn:3a3}
+            & -\Vert Ty - Tx\Vert^2 - 2(x - y)^T(Ty - Tx) \ge 
+            \Vert Tx - Ty\Vert^2
+            \\
+            &\iff -2(x - y)^T(Ty - Tx) \ge 2 \Vert Tx - Ty\Vert^2
+            \\
+            &\iff 
+            (x - y)^T(Tx - Ty) \ge \Vert Tx - Ty\Vert^2
+            \\
+            &
+            \iff 
+            \langle x - y, Tx - Ty\rangle 
+            \ge 
+            \Vert Tx - Ty\Vert^2
+        \end{align*}
+    \subsection*{(b)}
+        \textbf{Objective: }Show that: 
+        $$
+            \langle Tx - Ty, (I - T)x - (I - T)y\rangle \ge 0
+        $$
+        For this part we can choose to continue what we derived before and them show the equivalency of this statement and the previous statement. 
+        \begin{align*}\tag{3b1}\label{eqn:3b1}
+            \langle x - y, Tx - Ty\rangle &\ge \Vert Tx - Ty\Vert^2
+            \\
+            \langle x - y, Tx - Ty\rangle &\ge \langle Tx - Ty, Tx - Ty\rangle
+            \\
+            \langle x - y, Tx - Ty\rangle 
+            -
+            langle Tx - Ty, Tx - Ty\rangle &\ge 0
+            \\
+            \langle Tx - Ty, x -y - Tx + Ty\rangle \ge 0
+            \\
+            \langle Tx - Ty, (I - T)x + (I - T)y\rangle &\ge 0
+        \end{align*}
+    \subsection*{(c)}
+        \textbf{Objective: } Suppose that $S = 2T - I$, then we let: 
+        $$
+        \mu = \Vert Tx  - Ty\Vert^2 +
+        \underbrace{\Vert (I - T)x - (I - T)y\Vert^2 }_{(1)}
+        - \Vert x - y\Vert^2
+        $$
+        $$
+        v = \Vert Sx - Sy\Vert^2 - \Vert x - y\Vert^2
+        $$
+        Then sow that $2\mu = v$
+        \\
+        Consider the expression (1), we should have: 
+        \begin{align*}\tag{3c1}\label{eqn:3c1}
+            & \Vert (I - T)x - (I - T)y\Vert^2
+            \\
+            &= 
+            \Vert x - Tx - y + Ty\Vert
+            \\
+            &= 
+            \Vert (Ty - Tx) + (x - y)\Vert^2
+            \\
+            &=
+            \Vert Ty - Tx\Vert^2 + \Vert x - y\Vert^2
+            + 2(x - y)^T(Ty - Tx)
+        \end{align*}
+        And notice that substituting in we have: 
+
+        \begin{align*}\tag{3c2}\label{eqn:3c2}
+            \mu &= 2 \Vert Ty - Tx\Vert^2
+            + 2(x - y)^T(Ty - T x)
+            \\
+            2\mu &= 4 \Vert Ty - Tx\Vert^2 
+            + 4(x - y)^T(Ty - T x)
+            \\
+            &= \Vert 2Ty - 2Tx\Vert^2 + 2(x - y)^T(2Ty - 2Tx) + \Vert x - y^2 \Vert - \Vert x - y\Vert^2
+            \\
+            &= \Vert 2Ty - 2Tx + x - y\Vert^2 - \Vert x - y\Vert^2
+            \\
+            & =\Vert 2Tx - 2Ty + y - x\Vert^2 - \Vert x - y\Vert^2
+            \\
+            &= \Vert Sx - Sy\Vert^2 - \Vert x - y\Vert^2
+            \\
+            &= v
+        \end{align*}
+        By the non-expansive property for the operator $S$ we have: 
+        \begin{align*}\tag{3c3}\label{eqn:3c3}
+            v &= \Vert Sx - Sy \Vert^2 - \Vert x - y \Vert^2 \le 0
+            \\
+            2\mu &\le 0
+            \\
+            \mu &\le 0
+            \\
+            \Vert Tx - Ty\Vert^2 + \Vert (I - T)x - (I - T)y\Vert^2 &\le  \Vert x - y\Vert^2
+        \end{align*}
+        Therefore, we can conclude that, if the operator $S$ is non expansive, meaning that $2T -I$ is non-expansive, the operator $T$ is firmly non-expansive. 
+
+        
+\end{document}

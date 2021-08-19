@@ -1,0 +1,137 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage[all]{xy}
+\usepackage{epstopdf}
+\usepackage{hyperref}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+
+% these packages make it easy to include figures in the text. 
+\usepackage{float}
+\restylefloat{figure}
+
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cF}{\mathcal{F}}
+
+
+
+
+\begin{document}
+{\Large Name:}  \\
+\begin{center}
+\Large AMATH 515 \hskip 2in Homework Set 0\\
+{\bf Due:  Wednesday, January 13th, by midnight}. 
+\end{center}
+
+\bigskip
+
+%\item Read section 1.5 of the course notes (LivingText) and show the following: 
+%\begin{enumerate}
+%\item First part of Corollary 1.14. Given any $\beta$-smooth function $f: U \rightarrow \mathbb{R}$, for any points $x,y \in U$, the inequality 
+%\[
+%\left| f(y) - f(x) - \nabla f(x)^T(y-x)\right| \leq \frac{\beta}{2}\|y-x\|^2
+%\]
+%holds. 
+%
+%\item In class we saw that the operator norm on $\nabla^2 f(x)$ gives a $\beta$. Show the opposite direction, i.e. that if $f$ is $\beta$-smooth 
+%and twice-continuously differentiable, then $\|\nabla^2 f\| \leq \beta$.
+%
+%\end{enumerate}
+%
+%\bigskip\bigskip
+
+The goal of this homework is to make sure you are comfortable with all prerequisites for this class, to set-up Python and Jupyter Notebook, and to try submitting your work to Gradescope Autograder. 
+The theoretical portion of the homework will be graded based on completeness, and is intended as a primer on calculus and linear algebra. 
+
+
+\section{Theory}
+\begin{enumerate}
+	\item Submit your write-up to Gradescope. Look for the assignment "Homework 0 -- theory".
+
+\item {\bf Calculus primer}. For a function $f:\mathbb{R}^n \rightarrow \mathbb{R}$, we define the 
+{\it gradient} to be the vector of partial derivatives: 
+\[
+\nabla f(x) = \begin{bmatrix} \frac{\partial f}{\partial x_1} \\ \vdots \\ \frac{\partial f}{\partial x_n}\end{bmatrix}
+\]
+and the {\it Hessian} to be the matrix of second partial derivatives: 
+\[
+\nabla^2 f(x) = 
+\begin{bmatrix} \frac{\partial^2 f}{\partial x_1 \partial x_1}  & \dots & \frac{\partial^2 f}{\partial x_1 \partial x_n}
+\\ \vdots 
+\\ \frac{\partial^2 f}{\partial x_n \partial x_1} & \dots & \frac{\partial^2 f}{\partial x_n \partial x_n}\end{bmatrix}
+\]
+Compute the gradients and hessians of the following functions, with $x \in \mathbb{R}^4$ in all three examples. 
+\begin{enumerate}
+\item $f(x) = \sin(x_1 + x_2 + x_3 + x_4)$ \\
+\item $f(x) = \|x\|^2 = x_1^2 + x_2^2 + x_3^2 + x_4^2$\\
+\item $f(x) = \ln(x_1x_2x_3x_4)$.  
+\end{enumerate}
+
+\newpage
+
+\item {\bf Linear algebra primer.}
+\begin{enumerate}
+\item What are the eigenvalues of the following matrix: 
+\[
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+\pi & 2 & 0 & 0 \\
+64 & -15 & 3 & 0 \\ 
+321 & 0 & 0 & 5 
+\end{bmatrix}
+\]
+
+\item Write down bases for the range and nullspace of the following matrix, written as the outer product of two vectors: 
+\[
+A = \begin{bmatrix}
+1 \\ 0 \\ 1
+\end{bmatrix} 
+\begin{bmatrix}
+1 & 1 & 1
+\end{bmatrix} 
+\]
+
+\item Let $A$ be a $10 \times 5$ matrix, and $b$ a vector in $\mathbb{R}^{10}$.  The notation $A^T$ denotes the {\it transpose} of $A$, where the columns of $A$ are rows of $A^T$.
+\begin{itemize}
+\item What is the size of $A^TA$? What is the size of $A^Tb$?
+\item How many solutions might there be to the system $Ax = b$? 
+\item How many solutions might there be to the system $A^TA x = A^T b$?
+\item Suppose the columns of $A$ are linearly independent. How many solutions might there be to the system $Ax=b$? To the system $A^TAx = A^Tb$?
+\end{itemize}
+
+
+
+
+\end{enumerate} 
+
+
+
+\end{enumerate}
+
+\bigskip \bigskip
+
+
+\section{Practice}
+\begin{enumerate}
+	\item Install Anaconda3 distribution. Instruction:\\ \href{https://www.anaconda.com/products/individual}{https://www.anaconda.com/products/individual}
+		\begin{itemize}
+			\item 		If you've never used Python before -- here is an excellent Python introduction: \\  \href{https://www.learnpython.org}{https://www.learnpython.org}
+			\item If you have experience with scientific computing in MATLAB, but you've never tried Python, here is a useful migration guide: \\\href{https://www.enthought.com/white-paper-matlab-to-python-a-migration-guide/}{https://www.enthought.com/white-paper-matlab-to-python-a-migration-guide/}
+		\end{itemize}
+	\item Download "Homework0.ipynb" from Canvas, open it as a Jupyter Notebook, and complete all the tasks there.
+		\begin{itemize}
+			\item If you've never used Jupyter Notebooks then take a look at this tutorial:
+		\href{https://www.dataquest.io/blog/jupyter-notebook-tutorial/}{https://www.dataquest.io/blog/jupyter-notebook-tutorial/}
+		\end{itemize}
+
+	\item Submit your Jupyter Notebook to Gradescope. Look for the assignment "Homework 0 -- coding". There is no limit for the number of attempts for the coding part this time. 
+\end{enumerate}
+
+\end{document}  

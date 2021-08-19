@@ -1,0 +1,720 @@
+\documentclass[]{article}
+\usepackage{amsmath}\usepackage{amsfonts}
+\usepackage[margin=1in,footskip=0.25in]{geometry}
+
+\usepackage{mathtools}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+\usepackage[final]{graphicx}
+% \usepackage{wrapfig}
+\graphicspath{{.}}
+
+\begin{document}
+    \vspace{0.3em} Name: Hongda Li
+    \par Class: AMATH 515 Winter 2021
+    \par HW1: Theoretical Portion
+
+\section*{Notations and Rules I used: }
+\begin{enumerate}
+    \item\label{itm:rule1} $f^E(x)$ where $x\in \mathbb{R}^n$ is the vectorized function, defined as:
+        $$
+        f^E(x) :=
+        \begin{bmatrix}
+        f(x_1) \\ f(x_2) \\ \vdots \\f(x_n)
+        \end{bmatrix}
+        $$
+    
+    \item\label{itm:rule2} Taking composite scalar function ($f(x): \mathbb{R}^n \mapsto \mathbb{R}$) with a Multi-Variable function ($G: \mathbb{R}^m\mapsto \mathbb{R}^n$) wrt to a certain variable:
+        $$
+        \partial_{xi} (f(G(x))) = \left(
+            \frac{\partial G(x)}{\partial{x_i}}
+        \right)^T\nabla f(G(x))
+        $$
+    
+    \item Disambiguate the way we use $\nabla$.  $\nabla[f]$ means taking the gradient of $f$, and $\nabla[f(g(x))]$ means take the gradient on the composition, which is $\nabla f\circ g(x) $. However $\nabla f(g(x))$ means putting $g(x)$ as input for the gradient of $f$. 
+    
+    \item\label{itm:rule4} Take derivative of composition of multiple-input and output functions, which is used for briefly on deriving the Hessian of the Logistic objective. Let $F$ be $\mathbb{R}^m \mapsto \mathbb{R}^n$ and $G$ be $\mathbb{R}^K \mapsto \mathbb{R}^m$. 
+    \\
+    Assuming that we are taking the derivative on the $i$ th input wrt the whole multi-variable function, which should give us a gradient. 
+        $$
+            \frac{\partial F(G(x))}{\partial x_i} = \nabla F(G(x)) \left(
+                \frac{\partial G(x)}{\partial x_i}
+            \right)
+        $$
+    Where we take the Jacobian of $F$, put in $F(G(x))$ and them multiply it by the vector obtained by taking $G$ wrt to $x_i$.
+
+\end{enumerate}
+
+\newpage
+\subsection*{Problem 1}
+
+
+\vspace{1em}
+Let $g: \mathbb{R}^{m} \rightarrow \mathbb{R}$ is a twice differentiable function, $A \in \mathbb{R}^{m \times n}$ any matrix, and $h$ is the composition $g(A x),$.
+
+
+\subsection*{(a)}
+    Show $\nabla h(x) = A^T\nabla g(Ax)$
+    Consider taking derivative with respect to one of the input variable on $h(x)$:
+    $$
+    \partial_{xi} h(x) = \partial_{xi} g(Ax)
+    $$
+    Using \hyperref[itm:rule1]{rule 1}, we have:
+    $$
+    \left(
+        \frac{\partial Ax}{\partial_{xi}}
+    \right)^T \nabla g(Ax)
+    $$
+    Take notice that, the first part of the expression is taking derivative on a linear function, therefore the derivative is just the $i$ th column of the matrix, where we denoted it as: $A_{\text{col}(i)}$, hence:
+    $$
+    (A_{\text{col}(i)})^T\nabla g(Ax)
+    $$
+    Take notice that, the gradient is all the differential with respect to all the variable stacked together into a vector, therefore we have:
+    $$
+        \nabla[g(Ax)]= \begin{bmatrix}
+          \partial_{x1}(g(Ax))\\
+          \partial_{x2}(g(Ax)) \\\vdots \\
+          \partial_{x_n}(g(Ax))
+        \end{bmatrix}
+        =\begin{bmatrix}
+          (A_{\text{col(1)}})^T \nabla g(Ax) \\
+          (A_{\text{col(2)}})^T \nabla g(Ax) \\ \vdots \\
+          (A_{\text{col(n)}})^T \nabla g(Ax) \\
+        \end{bmatrix}=
+        A^T\nabla g(Ax)
+    $$
+\subsection*{(b)}
+    Show that $\nabla^2h(x) = A^T\nabla^2g(Ax)A$. \\
+    \textbf{Note} that there are multiple outputs and multiple input, so for each output, we are taking it wrt a particular input variable, resulting in the Jacobian of the gradient.
+    \\
+    Consider taking the $j$ th output of the function wrt to the $i$ th variable $x_i$:
+    $$
+    \partial_{xi} \left[(A^T\nabla g(Ax))_j\right]
+    $$
+    With matrix multiplication, the j th output is the j th row multiplied multiplied by the vector: 
+    $$
+    \partial_{xi}\left[
+        (A^T)_{\text{row(j)}} \nabla g(Ax)
+    \right] =
+    \partial_{xi}\left[
+        (A)_{\text{col(j)}}^T \nabla g(Ax)
+    \right]
+    $$
+    Notice that, the differential operator can move pass the vector dot product because the vector consists of only constant.
+    $$
+        (A_{\text{col(j)}})^T
+        \frac{\partial \nabla g(Ax)}
+        {\partial_{xi}}
+        =
+        (A_{\text{col(j)}})^T
+        \left(
+            \nabla^2g(Ax)
+            \left(
+                \frac{\partial Ax}{\partial_{xi}}
+            \right)
+        \right)
+    $$
+    We use the \hyperref[itm:rule4]{rule 4} to take the derivative and get the Hessian $\nabla^2 g$, and the last term in the expression is constant, therefore we get out one of the column of the matrix for that:
+
+    $$
+    (A_{\text{col(j)}})^T
+        \left(
+            \nabla^2g(Ax)
+            \left(
+                A_{\text{col(i)}}
+            \right)
+        \right)
+    $$
+    And the above expression is the element for in position $i, j$, therefore, the whole matrix can be compactly written as:
+    $$
+    \nabla^2h(x) = A^T\nabla^2g(Ax)A
+    $$
+
+\subsection*{(c)}
+    Compute the gradient and Hessian for the scalar function:
+    $$
+    \sum_{i = 1}^m \log(1 + \exp(a^T_ix)) - b^TAx
+    $$
+    Where $a^T_i$ denotes the $i$ th row  of the matrix $A$.
+    The above formulation can be written as a vector notation (We keep the notation, using $g(x)$ to represent the function we are taking the gradient and Hessian of.):
+
+    $$
+    g(Ax) = J_m^T \log(1 + \exp^E(Ax)) - b^T Ax
+    $$
+    Where the vector $J_n$ is a vector full of ones with length $n$.
+    The function can be implicitly written wrt to $x$, and we have:
+    $$
+    g(x) = J_m^T \log(1 + \exp^E(x)) - b^T x
+    $$
+    Then the gradient is just:
+    $$
+    \nabla g(x) =  \frac{
+    \exp^E(x)
+        }{
+        1 + \exp^E(x)
+        } - b
+    $$
+    Therefore, we can use the formula we had and get the \textbf{Gradient: }
+    $$
+    \nabla [g(Ax)] = \nabla[Ax]^T \nabla g(Ax) = A^T
+    \frac{
+    \exp^E(Ax)
+        }{
+        1 + \exp^E(Ax)
+        } - A^Tb
+    $$
+
+    And now we can write the gradient in a big vector and then find the Jacobian of the Gradient.
+    $$
+    \nabla [g(Ax)] =
+    A^T
+    \begin{bmatrix}
+        \frac{\exp(a_1^Tx)}{1 + \exp(a_1^Tx)} - b_1 \\[0.5em]
+        \frac{\exp(a_2^Tx)}{1 + \exp(a_2^Tx)} - b_2 \\[0.5em]
+        \vdots \\[0.5em]
+        \frac{\exp(a_m^Tx)}{1 + \exp(a_m^Tx)} - b_m \\[0.5em]
+    \end{bmatrix}
+    $$
+    Notice that, each of the row is only associated wit one element, therefore the Jacobian of the Gradient (Hessian) is going to be a diagonal matrix:
+    $$
+    \nabla^2g(x) =
+        \begin{bmatrix}
+        \frac{\exp(x_1)}{(1 + \exp(x_1))^2}    & & & \\
+        & \frac{\exp(x_2)}{(1 + \exp(x_2))^2} & & \\
+        & & \ddots & \\
+        & & & \frac{\exp(x_n)}{(1 + \exp(x_n))^2}
+        \end{bmatrix}
+    $$
+    And here is how I the derivative is computed:
+    $$
+    \partial_x
+    \left(
+        \frac{\exp(x)}{1 + \exp(x)}
+    \right)
+     =
+     \left(
+     \frac{\exp(x)}{1 + \exp(x)}
+     -
+     \frac{(\exp(x))^2}{(1 + \exp(x))^2}
+     \right) =
+     \frac{\exp(x)}{(1 + \exp(x))^2}
+    $$
+    And using the formula we had earlier, we know that:
+
+    $$
+    \nabla^2[g(Ax)]
+    =
+    A^T \begin{bmatrix}
+            \frac{\exp(a_1^T x)}{(1 + \exp(a_1^T x))^2}    & & & \\
+            & \frac{\exp(a_2^T x)}{(1 + \exp(a_2^T x))^2} & & \\
+            & & \ddots & \\
+            & & & \frac{\exp(a_n^T x)}{(1 + \exp(a_n^T x))^2}
+        \end{bmatrix}
+        A
+    $$
+
+
+\newpage
+\section*{Problem 2}
+\subsection*{(a)}
+    \hspace{1.1em}
+    Prove that the convex indicator function is a convex function. The convex indicator function is:
+        \begin{equation*}\tag{2.a.1}\label{eqn:2.a.1}
+            \delta_c(x) :=
+        \begin{cases}
+        0 & x \in C \\ \infty & x\not\in C
+        \end{cases}
+        \end{equation*}
+    Where $C$ is a convex set.
+    
+    \par
+    \textbf{Proof Strategy}: We prove that the epigraph of the function is another convex set, therefore by definition of convexity, the function is convex.
+    
+    \par
+    By definition of epigraph, we have that:
+        \begin{equation*}\tag{2.a.2}\label{eqn:2.a.2}
+            \text{epi}(\delta_C) = \left\lbrace
+            \begin{bmatrix}
+                \alpha \\ x
+            \end{bmatrix} :
+            \alpha \ge \delta_C(x)
+        \right\rbrace
+        \end{equation*}
+    
+    \par
+    Firstly, the second element in the vector will has to be in the convex set $C$ for it to be in the epigraph of the function because:
+        $$
+        x\not\in C \implies \forall \alpha: \alpha < \infty \implies
+        \begin{bmatrix}
+        \alpha \\ x
+        \end{bmatrix}
+        \not\in \text{epi}(\delta_C)
+        $$
+    Therefore, it has to be the case that $x \in C$.
+    
+    \vspace{1em}\par
+    Now that we have the epigraph of the function well-defined, we choose 2 arbitrary elements from it and prove that their convex combination is in the epigraph too.
+    \par
+    let the 2 arbitrary elements be:
+        $$
+        \forall \begin{bmatrix}
+        \alpha \\ x
+        \end{bmatrix}, \begin{bmatrix}
+        \beta \\ y
+        \end{bmatrix}
+        \in \text{epi}(\delta_C): \alpha, \beta \ge 0
+        $$
+    This is by the definition of the epigraph of the function.
+    Therefore:
+        $$
+        \alpha, \beta \ge 0 \implies \alpha + \lambda(\beta - \alpha) \ge 0 \quad \forall
+        \lambda \in [0, 1]
+        $$
+    At the same time:
+        $$
+        x, y \in C \implies x + \lambda (y - x) \in C
+        $$
+    By the definition of the convexity of the graph too.
+    Therefore, we have the statement that:
+        $$
+        \begin{bmatrix}
+        \alpha \\ x
+        \end{bmatrix} + \lambda \begin{bmatrix}
+        \beta - \alpha \\ y - x
+        \end{bmatrix}\in \text{epi}(\delta_C)
+        $$
+    \par
+    Therefore, the epigraph of the function is a convex set, and using the definition for the convexity of function, we know that the convex indicator function is a convex function as well.
+
+\subsection*{(b)}
+    Show that the support function of any set is a convex function. The support function is defined as:
+        $$
+        \sigma_C(x) = \sup_{c \in C} \{c^T x\}
+        $$
+    Using the definition of the convex function, we need to show that:
+        \begin{equation*}\label{eqn:2.b.1}\tag{2.b.1}
+            \sigma_C(x + \lambda (y - x)) \le \sigma_C(x) + \lambda \sigma_C(y - x)
+        \quad
+        \end{equation*}
+    Notice that by definition of the support function:
+        $$
+        \sigma_C(x + \lambda (y - x)) = \sup_C\{c^T x + \lambda c^T(y -x)\}
+        $$
+    And notice that, by the properties of the supremum, we know that:
+        $$
+        \sup_{c\in C} \{
+            c^Tx + \lambda c^T(y - x)
+        \} \le \sup_{c\in C}\{c^Tx\} + \lambda \sup_{c\in C}\{
+            c^T(y - x)
+        \}
+        $$
+    \par
+    And substituting with the definition of the function, we will reveal that the convexity definition and it's the same as \ref{eqn:2.b.1}.
+
+\subsection*{(c)}
+    There are 2 important properties of norm that will show that norm balls are convex functions:
+    \begin{enumerate}
+        \item[(1)] $\Vert x + y \Vert \le \Vert x \Vert + \Vert y\Vert$
+        \item[(2)] $\Vert \alpha x\Vert \le |\alpha| \Vert x\Vert$
+    \end{enumerate}
+    Consider the expression:
+    $$
+    \Vert x + \lambda (y - x)\Vert
+    $$
+    Using the properties above we know that:
+    $$
+    \Vert x + \lambda (y - x)\Vert  \le
+        \Vert x\Vert + |\lambda| \Vert y - x\Vert
+    $$
+    And therefore, we have show that the function is convex, because this is the definition of a convex function.
+
+\newpage
+\section*{Problem 3}
+\subsection*{(a)}
+    Let $f(x) := -x$, which is linear, and linear functions are convex, now let $g(x):= 0$ which is convex, because it satisfies the \textbf{Gradient inequality}.
+    However, their composite is not a convex function because:
+    $$
+    f(g(x)) = -x^2
+    $$
+    This is not convex because the line with both end points lies on $(1, \pm 1)$ is below the function, and therefore, invalidates the convex definition.
+
+\subsection*{(b)}
+    \textbf{Claim}:  ``If $f(x)$ is convex and \textbf{non-increasing}, and $g(x)$ is concave, then $f(g(x)) $is a convex function."
+    \\[.5em]
+    \textbf{Proof strategies}: We are going to use the first differential characterization of the convex function to prove it.
+    \\[.5em]
+    By the hypothesis that $f(x)$ is convex and the range of $g(x)$ falls into the domain of function $f(x)$, we know that:
+    $$
+    f(g(y)) - f(g(x)) \ge f'(g(x))(g(y) - g(x)) \quad \textbf{(3.b.1)}
+    $$
+    Now with the assumption that $g(x)$ is concave, which means that $-g(x)$ is convex, which means that swapping the inequality sign for the convexity for $g(x)$ will give us the correct statement:
+    $$
+    g(y) - y(x) \le g'(x)(y - x)
+    $$
+    By the assumption that $f(x)$ is a non-increasing function, we know that $f(x) \le 0$ for all $x$ in the domain, which means multipliying $f'(g(x))$ on the above equation will swap the inequality giving us:
+    \begin{equation}\tag{3.b.2}\label{eqn:3.b.2}
+        f'(g(x)) (g(y) - g(x)) \ge f'(g(x))g'(x)(y - x)
+    \end{equation}
+    Chaining it with expression (3.b.1) will give us the desire inequality:
+    $$
+    f(g(y)) - f(g(x)) \ge f'(g(x))g'(x)(y - x)
+    $$
+    Therefore, the composite of these 2 functions is a convex function.
+    \\
+    \textbf{Corollary}: If the function $f(x)$ is convex and non-decreasing, and function $g(x)$ is convex, then the composite, $f(g(x))$ is convex. If $g(x)$ is convex, then:
+    $$
+    g(y) - y(x) \ge g'(x)(y - x)
+    $$
+    And at the same time, because $f(x)$ is non decreasing, we have:
+    $$
+    f'(g(x)) (g(y) - g(x)) \ge f'(g(x))g'(x)(y - x)
+    $$
+    And we arrive at the sane place as \ref{eqn:3.b.2}, the composite function is convex.
+
+\subsection*{(c)}
+    \textbf{Claim:} ``$f: \mathbb{R}^m \mapsto
+    \mathbb{R}$ is convex, $g: \mathbb{R}^n \mapsto \mathbb{R}^m$" is affine linear, then $f(g(x))$ is convex.
+    $g(x)$ being affine linear means that:
+    \begin{equation}\label{eqn:3.c.1}\tag{3.c.1}
+        g(x + h) = g(x) + \nabla g(x)h
+    \end{equation}
+    \\
+    Using the first statement of differential characterization on convex functions on $f$, we have:
+    \begin{equation}\label{eqn:3.c.2}\tag{3.c.2}
+        f(\alpha + \beta) \ge f(\alpha) + \nabla f(\alpha)^T\beta
+    \end{equation}
+    Using \ref{eqn:3.c.2} and \ref{eqn:3.c.1}we can say that:
+    \begin{equation}\label{eqn:3.c.3}\tag{3.c.3}
+        f(g(x + \lambda(y - x))) = f(g(x) + \lambda \nabla g(x)(y - x))
+        \ge \nabla f(g(x))^T(\lambda \nabla g(x)(y - x))
+    \end{equation}
+    Take note that, the above equation if true for all $\lambda \in [0, 1]$ and $\nabla g(x)$ denotes the Jacobian of the function $g(x)$. Substituting $\lambda = 1$ into \ref{eqn:3.c.3}, we have:
+    $$
+        f(g(y)) \ge f(g(x)) + \nabla f(g(x))^T\nabla g(x)(y - x)
+    $$
+    And this is the definition of a convex function. $f(g(x))$ is a convex function.
+
+     
+
+\subsection*{(d)(i)}
+    \textbf{Claim(3.d.i.1)}: The function:
+    $
+    \sum_{i = 1}^n \log(1 + \exp(a_i^Tx)) - b^TAx
+    $
+    is a convex function.
+    \\
+    \textbf{Proof strategies} The function is the sum of composite function of an affine linear function and a convex function, therefore the whole function is convex. 
+    \\
+    \textbf{Claim (3.d.i.2)} The second derivative of the logistic objective function $\log(1 + \exp(x))$ is positive definite.
+    \\
+    This is true because the second derivative is:
+    \begin{align*}
+        \frac{\exp(x)}{(1 + \exp(x))^2} \ge 0 \quad \forall x
+    \end{align*}
+    And therefore, for each of the term in the summation, we have: $\log(1 + \exp(a_i^Tx))$ is convex (by 3(c)). Using the fact that sum of convex functions are convex (see d.ii.3), the function is convex. 
+
+\subsection*{(d)(ii)}
+    \textbf{Claim}: The function $\sum_{i = 1}^n\exp(a_i^Tx) - b^TAx$ is a convex function.
+    \\
+    \textbf{Proof strategies}: The function is a sum over a lot of functions, and all of them are convex.
+    \\
+    \textbf{Claim (d.ii.1)}: $b^TAx$ is convex, this is true because it's a linear function.
+    \\
+    \textbf{Claim (d.ii.2)}: $\exp(a_i^Tx)$ is a convex function.
+    \\
+    This is true because, $a_i^Tx$ is a linear function, hence it's convex, and $\exp(x)$ is a convex and non-decreasing function (by second derivative of $e^x$) is positive, and the composite of a non-decreasing convex function with a convex function is convex (by part corollary from part (b)).
+    \\
+    \textbf{Claim (d.ii.3)}: Sum of convex function is still convex.
+    \\
+    \begin{align*}
+        f_i(x + \lambda(y - x)) &\le f_i(x) + \lambda f_i(y - x)  \quad
+        \forall 1 \le i \le n
+        \\
+        \sum_{i = 1}^n f_i(x + \lambda(y - x)) &\le \sum_{i = 1}^n f_i(x) + \lambda f_i(y - x)
+    \end{align*}
+    This is just by the properties of the inequalities.
+    \\
+    By claims (d.ii.1)(d.ii.2)(d.ii.3), we proved that the first claim, that the Poisson objective function is a convex function.
+
+
+\newpage
+\section*{Problem 4}
+    A function is strictly convex if:
+    \begin{equation*}\label{eqn:def1}\tag{def1}
+        f(\lambda x + (1 - \lambda)y) < \lambda f(x) + (1 - \lambda )f(y) \quad \forall \lambda \in (0, 1)
+    \end{equation*}
+
+\subsection*{(a)}
+    The function $e^x$ is strictly convex because it's second derivative is strictly positive and it's a C2 smooth function. This function doesn't have a minimizer because it decreases monotonicall as $x\rightarrow -\infty$.
+
+\subsection*{(b)}
+    \textbf{Claim: (4.b.1)} The sum of strictly convex functions and convex function is strictly convex.
+    \\
+    \textbf{Proof Strategies} Direct Proof.
+    \\
+    Let $f(x)$ and $g(x)$ be convex and strictly convex, then:
+    \begin{equation*}\label{eqn:4.b.2}\tag{4.b.2}
+        f(x + \lambda (y - x)) \le f(x) + \lambda f(y - x)
+    \end{equation*}
+    \begin{equation*}\tag{4.b.3}\label{eqn:4.b.3}
+        g(x + \lambda (y - x)) < g(x) + \lambda g(y - x)
+    \end{equation*}
+    Using the property of inequality, summing up \ref{eqn:4.b.2} and \ref{eqn:4.b.3} will get rid of the equality case, giving us:
+    \begin{equation*}
+         f(x + \lambda (y - x)) + g(x + \lambda (y - x)) < f(x) + \lambda f(y - x) + g(x) + \lambda g(y - x)
+    \end{equation*}
+    And that is the definition of the sum of the 2 function being convex, proving the claim.
+\subsection*{(c)}
+    \textbf{Task (4.c.1)} Characterize all solution to the problem: 
+    \begin{equation}\tag{4.c.1}\label{eqn:4.c.1}
+        \min_{x}\frac{1}{2}\Vert Ax - b\Vert^2
+    \end{equation}
+    \textbf{Strategies}: We will need to show that the function is convex, and then look for the local minimizer/minimizers. and use the Corollary of Characterization of Convexity, where it stated that, a local minimizer is the global minimizer. 
+    \\
+    \textbf{Claim (4.c.2)\label{4c2}}: The function is convex and its gradient can be zero (by Corollary of Characterization of Convexity), the function has minimizers. 
+    \\
+    This claim is true because Norm balls are convex and non-decreasing, and affine linear function is convex, in this case, the function is the norm of a linear affine function, and there composite is convex. 
+    \\
+    \textbf{Computing Gradient}
+    Simplify: 
+    \begin{align*}\tag{4.c.3}\label{eqn:4.c.3}
+      \Vert Ax - b\Vert^2 &= (Ax - b)^T(Ax - b)
+      \\
+      &= \Vert Ax\Vert^2 - 2(Ax)^Tb + \Vert b\Vert^2
+    \end{align*}
+    Take notice that, the objective function can be view as a composite function (Ignoring the constant at the front which doesn't change the minimization problem.): 
+    \begin{equation}\tag{4.c.4}\label{eqn:4.c.4}
+        g(Ax) = \Vert Ax\Vert^2 - 2(Ax)^Tb + \Vert b\Vert^2
+    \end{equation}
+    Which it implies that: 
+    \begin{equation}\tag{4.c.5}\label{eqn:4.c.5}
+        g(x) = \Vert x\Vert^2 - 2x^Tb + \Vert b\Vert^2
+    \end{equation}
+    And in this case, it's not hard to figure out the gradient as: 
+    \begin{align*}\tag{4.c.6}\label{eqn:4.c.6}
+        \nabla[g(x)] &= \nabla g(x) = 2x - 2b \\
+        \nabla[g(Ax)] &= A^T(2Ax - 2b) \\ 
+        \nabla[g(Ax)] &= 2A^TAx - 2b
+    \end{align*}
+    \textbf{Looking for Minimizer}: 
+    One of the necessary condition for convex optimality is Gradient equals to zero, which means that: 
+    \begin{align*}\tag{4.c.7}\label{eqn:4.c.7}
+         A^TAx - A^Tb &= \mathbf{0} \\ 
+         A^TAx &= A^Tb
+    \end{align*}
+    Therefore, the minimizer is $x^* = A^\dagger b$. By corollary of Different Characterization of convexity, these set of minimizers are also the global minimizer because the function is convex by \hyperref[4c2]{4.c.2}. 
+    However there are 2 cases: 
+    \begin{enumerate}
+        \item[1.] The matrix $A$ is full rank. In this case the matrix $A^TA$ is invertible and it will have infinitely many solution. 
+        \item[2.] The matrix $A$ is not full-ranked, in this case there will be infinitely many solution, hence, infinitely many minimizers. 
+    \end{enumerate} 
+\subsection*{(d)}
+    \textbf{Task: } Characterize the minimizers of the following equation(if there is any.): 
+    \begin{equation}\tag{4.d.0}\label{eqn:4.d.0}
+        \min_x
+        \left(
+         \sum_{i = 1}^{n} \left(
+            \log(1 + \exp(a_i^Tx))
+          \right)
+          + \lambda \Vert x\Vert_1 + (1 - \gamma)\Vert x\Vert^2 
+        \right)\quad \lambda > 0, \gamma \in (0, 1)
+    \end{equation}
+    \par
+    \textbf{Claim: 4.d.1}``If function $g(x)$ is convex then $g(x) + \gamma \Vert x\Vert^2/2$ is an alpha strongly convex function.", This statement is left as an exercise in lecture 4 (It's going to be proved here). 
+    
+    Let $g(x)$ be convex, now let's define $f(x)$ to be: 
+    $$
+    f(x) := g(x) + \frac{\alpha}{2}||x||^2
+    $$
+    And consider: 
+    \begin{align*}\tag{4.d.2}\label{eqn:4.d.2}
+        & f(x) + \nabla f(x)^T(y - x) + \frac{\alpha||y - x||^2}{2} \\ 
+        & g(x)+\frac{\alpha\Vert x\Vert}{2} + (\nabla g(x)^T + \alpha x)(y - x) + \frac{\alpha}{2}||y - x||^2\\
+        & \left[g(x) + \nabla g(x)^T(y - x)\right] + 
+            \left[\frac{\alpha||x||^2}{2}
+            +\alpha x^T(y - x) + \frac{\alpha}{2}||y - x||^2
+            \right]
+    \end{align*}
+    Let's focus what has been written inside the bracket and we have: 
+    \begin{align*}\tag{4.d.3}\label{eqn:4.d.3}
+        &
+        \frac{\alpha||x||^2}{2}
+        +\alpha x^T(y - x) + \frac{\alpha}{2}||y - x||^2
+        \\&
+        \frac{\alpha||x||^2}{2}
+        +\alpha x^T(y - x) + \frac{\alpha}{2}
+        \left(
+            \Vert y\Vert^2 + \Vert x \Vert^2 - 2x^Ty
+        \right)
+        \\&
+        \alpha\Vert x\Vert^2 - \alpha ||x||^2+\alpha x^Ty
+        +
+        \frac{\alpha}{2}
+        \left(
+            \Vert y\Vert^2 - 2x^Ty
+        \right)
+        \\&
+        \frac{\alpha}{2}||y||^2
+    \end{align*}
+    Therefore, \hyperref[eqn:4.d.2]{4.d.2} can be simplified into: 
+    \begin{equation*}\tag{4.d.4}\label{eqn:4.d.4}
+        f(x) + \nabla f(x)^T(y - x) + \frac{\alpha||y - x||^2}{2}
+        =
+        \left[g(x) + \nabla g(x)^T(y - x)\right] + 
+        \left\lbrack\frac{\alpha||y||^2}{2}
+        \right\rbrack
+    \end{equation*}
+    \par
+    However at the same time, we know that the function $g(x)$ is convex, using the definition of its convexity we have: 
+    \begin{align*}\tag{4.d.5}\label{eqn:4.d.5}
+        g(y) &\ge \nabla g(x) + g(x)^T(y - x) \\
+        g(y)+\frac{\alpha||y||^2}{2} &\underset{(1)}{\ge}
+        \left\lbrack g(x) + \nabla g(x)^T(y - x)\right\rbrack + 
+        \left\lbrack\frac{\alpha||y||^2}{2}
+        \right\rbrack
+        \\
+        g(y)+\frac{\alpha||y||^2}{2} &\ge f(x) + \nabla f(x)^T(y - x) + \left\lbrack\frac{\alpha||y - x||^2}{2}\right\rbrack
+    \end{align*}
+    \par
+    (1): by substituting \hyperref[eqn:4.d.4]{4.d.4}
+    \par
+    Setting the $\alpha$ to be $ \alpha \le (1 - \gamma)$, which is the regularization coefficient, we have: 
+    $$
+    f(x) \ge f(x) + \nabla f(x)^T(y - x) + \left\lbrack\frac{\alpha||y - x||^2}{2}\right\rbrack
+    $$
+    \par
+    Where: 
+    $$
+    f(x) = g(y)+\frac{(1 - \gamma)||y||^2}{2}
+    $$
+    Therefore the function $f(x)$ is strongly convex. 
+    \par
+    \textbf{Claim: 4.d.2} ``A strongly convex function has a unique minimizer''. This claim is left as a statement in lecture 4. 
+    \par
+    From problem 3(d) we know that the logistic regression is a convex function. 
+    \par
+    From problem 2(c) we know that norm with $p \ge 1$ are all convex function.
+    \par
+    Therefore the following function $g(x)$ is going to be convex: 
+    \par
+    $$
+    g(x):= \sum_{i = 1}^{n} \left(
+        \log(1 + \exp(a_i^Tx))
+      \right)
+      + \lambda \Vert x\Vert_1
+    $$
+    \par
+    Using claim \textbf{4.d.1} and \textbf{4.d.2} and $g(x)$ to be the logistic objective we know that the logistic regression with 2-Norm Regularization is a Alpha Strongly Convex function.
+
+    \par
+    \textbf{Note: }There might be a typo in the HW where the $-b^TAx$ term is missing for problem 4(d), but also notice that with the additional term $-b^TAx$ inserted into the definition for $g(x)$, the convexity remains unchanged and the same argument follows. 
+
+\newpage
+\section*{Problem 5}
+For the whole problem 5, I assume that we are using the 2-norm induced by vector for matrices. 
+\subsection*{(a)}
+    \textbf{Task: } Find a global bound for $\beta$ of the least-square objective $\Vert Ax - b\Vert^2$
+    \\
+    The gradient of the lest-square objective is: 
+        \begin{equation*}\tag{5.a.1}\label{eqn:5.a.1}
+            A^T(Ax - b)
+        \end{equation*}
+    This gradient of the objective is Lipschitz Continuous because: 
+        \begin{align*}\tag{5.a.2}\label{eqn:5.a.2}
+            &\Vert A^TAy- b - \left(
+                A^Tx - b
+            \right)\Vert
+            \\
+            &\Vert A^TA(y - x)\Vert
+            \\
+            &\le \Vert A^TA\Vert \Vert y - x\Vert
+        \end{align*}
+
+    Under the use of 2-norm, we know that $\Vert A\Vert_2$ is the largest singular value of the matrix, and in the case of Symmetric Matrix $A^TA$, the largest eigenvalue is the largest singular value of the matrix.
+
+    Therefore the upper bound for $\beta$ is: 
+        \begin{equation*}\tag{5.a.3}\label{eqn:5.a.3}
+            \beta = \max_{i}(|\lambda_i|) = \Vert A^TA\Vert
+        \end{equation*}
+    Where $\lambda_i$ are the eigenvalues of the matrix $A^TA$ also the singular value of the matrix too. 
+
+\subsection*{(b)}
+    \textbf{Task: } Find the $\beta$ for the regularized logistic objective: 
+        $$
+            \sum_{i = 0}^{m} \left(
+                \log (1 + \exp(a_i^T x))
+            \right) - b^TAx+ \frac{\lambda}{2}\Vert x\Vert^2
+        $$
+    Where $a_k^T$ are rows of a $m\times n$ matrix. 
+    \\
+    \textbf{Theorem 2}: $f$ is $C^2$ smooth if and only if $\beta I \succeq \nabla^2 f(x)$ and $\beta$ will be the bound for $\beta$ smoothness.
+    \\
+    Let $D$ denotes the diagonal matrix we derived for the Hessian in problem 1, let $g(Ax)$ denotes the objective without regularization. 
+        $$
+            D = \text{diag}\left(
+                \frac{\exp^E(x)}{(1 + \exp^E(x))^2}
+            \right)
+        $$
+    Then the Hessian of the objective will be: 
+        \begin{align*}\tag{5.b.1}\label{eqn:5.b.1}
+            \nabla^2[g(Ax) + \frac{\lambda}{2}\Vert x\Vert^2]
+            &= A^TDA + \lambda I
+        \end{align*}
+
+    And at this point, it's better to figure out the 2-norm of $A^TDA$ so we have an upperbound for the maximal absolute eigenvalue (Matrix is symmetric too). Here we assume that the matrix $A$ has SVD decomposition $U\Sigma V^T$. 
+        \begin{align*}\tag{5.b.2}\label{eqn:5.b.2}
+            \Vert A^TDA\Vert &= \Vert V \Sigma U^T D U \Sigma V^T  \Vert
+            \\
+            \Vert A^TDA\Vert &\le \Vert \Sigma^2\Vert \Vert D\Vert
+            \\
+            \Vert \Sigma^2\Vert \Vert D\Vert &\underset{(1)}{=} \max_{i} |\sigma_i|^2\Vert D\Vert \quad \text{Where $\sigma_i$ are singular values of $A$}
+        \end{align*}
+    (1): Induced 2 norm is the maximal absolute Eigenvalue of $\sqrt{\Sigma^4}$, therefore it's the maximal singular value squared; which is also the same as the maximum absolute value of the eigenvalues of $A^TA$ 
+    \\
+    Here, I should point out that: 
+        $$
+            \sup_{x\in \mathbb{R}} \left(
+                \frac{\exp(x)}{(1 + \exp(x))^2}
+            \right) = \frac{1}{4}
+        $$
+    By this point we have the inequality:
+        \begin{equation*}\tag{5.b.3}\label{eqn:5.b.3}
+            \Vert A^T DA\Vert = \frac{\max_{i} |\sigma_i|^2}{4}
+        \end{equation*}
+    Therefore, continue with \hyperref[eqn:5.b.1]{5.b.1} we have inequality: 
+        \begin{align*}\tag{5.b.4}\label{eqn:5.b.4}
+            \Vert A^TDA + \lambda x\Vert
+            &\le \Vert A^TDA\Vert + \lambda
+            \\
+            &\le \frac{\max_{i} |\sigma_i|^2}{4} + \lambda
+            \\
+            \beta &= \frac{\max_{i} |\sigma_i|^2}{4} + \lambda
+        = \frac{\max_i(\lambda_i)}{4} + \lambda
+        \end{align*}
+    Where $\lambda_i$ are the eigenvalues of matrix $A^TA$ and this is one of the possible value for $\beta$. 
+    \subsection*{(c)}
+    The poisson objective function: 
+    $$
+        \sum_{i = 1}^{n} \left(\exp(a_i^Tx) \right) - b^TAx
+    $$
+    Which is not Liptschitz continuous because exponential function has exponential function as its derivative and exponential function cannot be bounded globally with a constant $\beta$. In the case of Poisson objective, it's manifested as unbounded Eigenvalues for the Hessian of the exponential function. 
+
+\section*{Problem 6}
+    \subsection*{(a)}
+        \includegraphics*[width=10cm]{gradient-logistic.png}
+    \subsection*{(b)}
+        \includegraphics*[width=10cm]{newton-logistic.png}
+    \subsection*{(c)}
+        \includegraphics*[width=10cm]{gradient-poisson.png}\\
+        \includegraphics*[width=10cm]{newton-poisson.png}
+    \subsection*{(d)}
+        The steepest descend method is used for functions that are non beta smooth. In our HW coding part, the Poisson Objective function is not beta smooth. Qualitatively, The newton's method and the Gradient Descend with Backtracking Line search has the same Linear Convergence rate for the poisson Objective. However for the Logistic Objective, the Newton's method's convergence rate is quadratic. 
+
+
+\end{document}
+

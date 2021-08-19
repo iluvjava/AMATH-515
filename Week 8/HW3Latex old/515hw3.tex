@@ -1,0 +1,455 @@
+\documentclass[]{article}
+\usepackage{amsmath}\usepackage{amsfonts}
+\usepackage[margin=1in,footskip=0.25in]{geometry}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+\usepackage[final]{graphicx}
+
+% \usepackage{wrapfig}
+\graphicspath{{.}}
+
+\begin{document}
+\section*{Problem (1)}
+    \subsection*{(a)}
+        \textbf{Objective: }Find the conjugate of $\delta_{\mathbb{B}_\infty}(x)$. The function has definition: 
+        $$
+        \delta_{\mathbb{B}_\infty} = 
+        \begin{cases}
+            0 & \Vert x\Vert_\infty \le 1
+            \\
+            \infty & \text{else}
+        \end{cases}
+        $$
+        The definition of conjugate is: 
+        \begin{align*}\tag{1a1}\label{eqn:1a1}
+            \delta_{\mathbb{B}_\infty}^*(z) 
+            &= 
+            \sup_x \left\lbrace
+                z^Tx - \delta_{\mathbb{B}_\infty}(x)
+            \right\rbrace
+            \\
+            &= \sup_{\Vert x\Vert_\infty} \left\lbrace
+            z^Tx
+            \right\rbrace
+            \\
+            &= \max_{x_i}\left\lbrace
+                \sum_{i = 1}^n z_i x_i: |x_i|\le 1
+            \right\rbrace
+            \\
+            &= \sum_{i = 1}^n |z_i|
+            \\
+            &= \Vert z\Vert_1
+        \end{align*}
+
+    \subsection*{(b)}
+        \textbf{Objective: }Find conjugate for indication function of the 2 norm. 
+        From the definition of the function we have: 
+        $$
+        \delta_{\mathbb{B}_2}(x) = 
+        \begin{cases}
+            0 & \Vert x\Vert_2 \le 1 
+            \\
+            \infty & \text{else}
+        \end{cases}
+        $$
+        Then by definition of the conjugate we have: 
+        \begin{align*}\tag{1b1}\label{eqn:1b1}
+            \delta_{\mathbb{B}_2}^*(z) &= 
+            \sup_x \left\lbrace
+                z^Tx - \delta_{\mathbb{B}_2}(x)
+            \right\rbrace
+            \\
+            &= 
+            \sup_{\Vert x\Vert_2 \le 1} \left\lbrace 
+            z^Tx
+            \right\rbrace
+            \\
+            &= \frac{z^Tz}{\Vert z\Vert_2}
+            \\
+            &= \Vert z\Vert_2
+        \end{align*}
+
+    \subsection*{(c)}
+        \textbf{Objective: }Find conjugate of $\exp(x)$, assuming vectorized exponential. Notice that the function is smooth and concave and it's univariate. 
+        \begin{align*}\tag{1c1}\label{eqn:1c1}
+            \exp^*(z) &= \sup_{x} \left\lbrace
+            zx - \exp(x)
+            \right\rbrace
+        \end{align*}
+        Assume $z > 0$ consider: 
+        \begin{align*}\tag{1c2}\label{eqn:1c2}
+            \partial_x[zx - \exp(x)] &= 0
+            \\
+            [z - \exp(x)] &= 0
+            \\
+            x &= \log(z)
+            \\
+            \implies  \exp^*(z) &= \sup_{x} \{zx - \exp(x)\} = z\ln(z) - z
+        \end{align*}
+        Assume $z = 0$, we have: 
+        \begin{equation*}\tag{1c3}\label{eqn:1c3}
+            \exp^*(0) = \sup_x \{- \exp(x)\} = 0
+        \end{equation*}
+        Assume $z < 0$, we have: 
+        \begin{equation*}\tag{1c4}\label{eqn:1c4}
+            \exp^*(z) = \sup_x \{- \exp(x)\} = \infty
+        \end{equation*}
+        This is because $\lim_{x\rightarrow -\infty} (zx - \exp(x))$ gives $\infty$ if $z < 0$
+        Therefore:
+        $$
+            \exp^*(z) = \begin{cases}
+                z\ln(z) - z & z > 0
+                \\
+                0 & z = 0 
+                \\
+                \infty & z < 0
+            \end{cases}
+        $$
+
+    \subsection*{(d)}
+        \textbf{Objective:} Find the conjugate of the function $f(x)=\ln(1 + \exp(x))$. Notice that the function is convex and smooth, therefore, the inverse of it will be concave, hence setting the derivative to zero will provide us with the optimal. 
+        \\
+        By definition of conjugacy we have: 
+        $$
+            f^*(z) = \sup_x \left\lbrace
+            zx - \ln(1 + \exp(x))
+            \right\rbrace
+        $$
+        consider the partial derivative wrt to x: 
+        \begin{align*}\tag{1d1}\label{eqn:1d1}
+           \partial_x [zx - \ln(1 + \exp(x))] &= 0
+           \\
+           z &= \frac{\exp(x)}{1 + \exp(x)}
+           \\
+           z(1 + \exp(x)) &= \exp(x)
+           \\
+           z + z\exp(x) &= \exp(x)
+           \\
+           z &= (1 - z)\exp(x)
+           \\
+           \frac{z}{1 - z} &= \exp(x)
+           \\
+           x &= \ln
+           \left(
+               \frac{z}{1 - z}
+           \right)  \quad \text{Substitute this back}
+           \\
+           \implies
+           f^*(z) &= 
+           z\ln \left(
+               \frac{z}{1 - z}
+           \right)
+           - 
+           \ln \left(
+               1 + \frac{z}{1 - z}
+           \right)
+        \end{align*}
+        It's not all sunshine and rainbow, we have some conditions for $z$: 
+        \begin{equation*}\tag{1d2}\label{eqn:1d2}
+            \text{sign}(z) = \text{sign}(1 - z) \implies x \in (0, 1)
+        \end{equation*}
+        We can try to cover 2 of the edge cases of when $z = 0$ and $z = 1$ first, notice that this means we have: 
+        \begin{align*}\tag{1d3}\label{eqn:1d3}
+            \sup_x\{x - \ln(1 + \exp(x))\} &= 0
+            \\
+            \text{Notice: } \ln(1 + \exp(x)) &> x \quad \forall x
+            \\
+            \lim_{x\rightarrow\infty}(x - \ln(1 + \exp(x))) & = \lim_{x\rightarrow\infty}(\ln(\exp(x)) - \ln(1 + \exp(x)))
+            \\
+            &= \lim_{x\rightarrow \infty} \left(
+                \ln 
+                    \left(
+                        \frac{\exp(x)}{1 + \exp(x)}
+                    \right)
+            \right) = 0
+        \end{align*}
+        It's bounded above by zero. 
+        Similarly, when $z = 0$, we have: 
+        \begin{align*}\tag{1d4}\label{eqn:1d4}
+            \sup_x \{-\ln(1 + \exp(x))\} & = 0
+        \end{align*}
+        This is bounded above by zero, and $x\rightarrow-\infty$, this approaches zero. 
+        \begin{enumerate}
+        \item[1.] Consider $z < 0$ then $\sup_x\{zx - \ln(1 + \exp(x))\} = \infty$ because as $x\rightarrow -\infty$, the expression is approaching infinity. 
+        \item[2.] Consider $z > 1$ then $\sup_x\{zx - \ln(1 + \exp(x))\} = \infty$ because: 
+        \begin{equation*}\tag{1d5}\label{eqn:1d5}
+            \lim_{x\rightarrow\infty}
+            \left(
+                zx - \ln(1 + \exp(x))
+            \right)
+            =
+            \lim_{x\rightarrow\infty}
+            \left(
+                \ln(\exp(zx)) - \ln(1 + \exp(x))
+            \right)
+            =
+            \lim_{x\rightarrow\infty}
+            \left(
+                \ln
+                \left(
+                    \frac{\exp(zx)}{1 + \exp(x)}
+                \right)
+            \right) = \infty
+        \end{equation*} 
+        \end{enumerate}
+        Summing all the cases up we have the conjugate function to be: 
+        \begin{equation*}\tag{1d6}\label{eqn:1d6}
+            f^*(x) = 
+            \begin{cases}
+                z \ln \left(
+                    \frac{z}{1 - z}
+                \right)
+                -
+                \ln \left(
+                    \frac{1}{1 - z} 
+                \right) & z \in (0, 1)
+                \\
+                0 & z = 1 \vee z = 0
+                \\
+                \infty & \text{else}
+            \end{cases}
+        \end{equation*}
+        
+    \subsection*{(e)}
+        \textbf{Objective: }Look for the conjugate of $f(x):= x\ln(x)$. Notice that the function is convex and smooth. The conjugate is defined to be: 
+        $$
+        f^*(x) = \sup_x \left\lbrace
+        z^Tx - x\ln(x)
+        \right\rbrace
+        $$
+        And noticing that we can take thd derivative, setting it to zero and then solve for $x$, so we can get the value coming out of sup, we treat this function as a univariate function. 
+        \begin{align*}\tag{1e1}\label{eqn:1e1}
+            \partial_x[zx - x\ln(x)] &= 0
+            \\
+            z - (\ln(x) + 1) &= 0
+            \\
+            z - 1 &= \ln(x)
+            \\
+            \exp(z - 1) &= x
+        \end{align*}
+        No edge cases, this is well-defined for $x > 0$. 
+        Substituting it back to the expression inside of sup, we have: 
+        $$
+        f^*(z) = z\exp(z - 1) - (z - 1)\exp(z - 1)
+        $$
+\section*{Problem (2)}
+    \subsection*{(a)}
+        \textbf{Objective: }Express the conjugate of the function $f(x):= \lambda g(x)$ in terms of the conjugate of $g(x)$. 
+        \begin{align*}\tag{2a1}\label{eqn:2a1}
+        f^*(z) &= \sup_x \left\lbrace
+            z^Tx - \lambda g(x)
+        \right\rbrace
+        \\
+        &= \lambda \sup_x \left\lbrace
+            \frac{z^T}{\lambda}x - g(x)
+        \right\rbrace
+        \\ 
+        &= \lambda g \left(
+            \frac{z}{\lambda}
+        \right)
+        \end{align*}
+    \subsection*{(b)}
+        \textbf{Objective:} $f(x):= g(x - a) + b^Tx$ find conjugate of $f(x)$ in term of conjugate of $g$. 
+        \begin{align*}\tag{2b1}\label{eqn:2b1}
+            f^*(z) &= \sup_x \left\lbrace
+                z^Tx - g(x - a) - b^Tx
+            \right\rbrace 
+            \\
+            &= \sup_x \left\lbrace
+                (z^T - b^T)x - g(x - a)
+            \right\rbrace \quad \text{let: } y = x - a
+            \\
+            &= \sup_{y + a} \left\lbrace
+                (z^T - b^T)(y + a) - g(y)
+            \right\rbrace
+            \\
+            &= 
+            \sup_{y + a} \left\lbrace
+                (z^T - b^T)y + g(y)
+            \right\rbrace + (z^T - b^T)a
+            \\
+            &= g^*(y) + (z^T - b^T)a
+        \end{align*}
+    \subsection*{(c)}
+        \textbf{Objective:} Figure out conjugate of $f(x):= \inf_z \{g(x, z)\}$ using conjugate of $g(x, y)$. 
+        \\
+        The format of taking the conjugate of a bi-variable function is hinted in the lecture, and let's define it to be: 
+        $$
+            g^*(w, z) = \sup_{x, y} \left\lbrace
+                w^Tx + z^Ty - g(x, y)
+            \right\rbrace
+        $$
+        So then we can start with the definition of the conjugate of $f$: 
+        \begin{align*}\tag{2c1}\label{eqn:2c1}
+            f^*(y) &= \sup_x \left\lbrace
+                y^Tx - \inf_z \left\lbrace
+                    g(x, z)
+                \right\rbrace
+            \right\rbrace
+            \\
+            &= \sup_x \left\lbrace
+                y^Tx + \sup_z \left\lbrace
+                    -g(x, z)
+                \right\rbrace
+            \right\rbrace
+            \\
+            &= \sup_{x, z} \left\lbrace
+                y^Tx + w^T\mathbf{0} - g(x, z)
+            \right\rbrace
+            \\
+            &= g^*(y, \mathbf{0})
+        \end{align*}
+    \subsection*{(d)}
+        \textbf{Objective: }Find the conjugate of $f(x):= \inf_z \{
+            \frac{1}{2}\Vert x - z\Vert^2 + g(z)
+        \}$
+        \\
+        Notice that, the expression fits the pattern described in (c), and therefore, we are interested in looking for the conjugate of the function inside the inf: 
+        $$
+        h(x, y) := \frac{1}{2} \Vert x - y\Vert^2 + g(y) \quad f(x) = \inf_z \left\lbrace
+            h(x, z)
+        \right\rbrace
+        $$
+        Let's work it out: 
+        \begin{align*}\tag{2d1}\label{eqn:2d1}
+            h^*(v, w) &= \sup_{x, y} \left\lbrace
+                \underbrace{v^Tx + w^Ty - \frac{1}{2}\Vert x - y\Vert^2 - g(y)}_\text{smooth wrt x}
+            \right\rbrace
+            \\
+            \nabla_x \left[ 
+                v^Tx + w^Ty - \frac{1}{2}\Vert x - y\Vert^2 - g(y)
+            \right] &= \mathbf{0}
+            \\
+            v - (x - y) &= \mathbf{0}
+            \\
+            x &= v + y
+            \\
+            h^*(v, w) &= \sup_y \left\lbrace
+                v^T(v + y) + w^t y - \frac{1}{2} \Vert v\Vert^2 - g(y)
+            \right\rbrace
+            \\
+            &=
+            \sup_y \left\lbrace
+                (v^T + w^T)y - g(y)
+            \right\rbrace + \frac{1}{2}\Vert v \Vert^2
+            \\
+            &= g^*(v + w) + \frac{1}{2} \Vert v\Vert^2
+        \end{align*}
+        Using \hyperref[eqn:2c1]{2c1}, we have: 
+        \begin{align*}\tag{2d2}\label{eqn:2d2}
+            f^*(y) &= h^*(y, \mathbf{0}) 
+            \\
+            f^*(y) &= g^*(y) + \frac{1}{2}\Vert y\Vert^2
+        \end{align*}
+\section*{Problem (3)}
+    \subsection*{(a)}
+        \textbf{Objective:} Derive the equality: $$
+        \underset{f}{\text{prox}} \left(
+            z
+        \right) + 
+        \underset{f^*}{\text{prox}}(z) = z
+        $$
+        With the assumption the $f$ is closed and convex. 
+        \\
+        \textbf{Claim 3a1\label{3a1}}
+        $$
+            u = \underset{f}{\text{prox}}(z) \iff z - u\in \partial f(u)
+        $$
+        \textbf{Claim 3a2 \label{3a2}}
+        $$
+        z \in \partial f(x) \iff x\in \partial f^*(z)
+        $$
+        \textbf{Proof:}
+        \begin{align*}\tag{3a3}\label{eqn:3a3}
+            z-u &\in \partial (u) \\
+            u &\in \partial f^*(z - u) \quad \text{by \hyperref[3a2]{3a2}}\\
+            z - (z - u) &\in \partial f^*(z - u) \\
+            z - u &= \underset{f^*}{\text{prox}}(z) \quad \text{by \hyperref[3a1]{3a1}}
+        \end{align*}
+        Therefore: 
+        $$
+        \underset{f}{\text{prox}} \left(
+            z
+        \right) + 
+        \underset{f^*}{\text{prox}}(z) = z - u + u = z
+        $$
+
+    \subsection*{(b)}
+        \textbf{Objective}: Verify part (a) using $\text{prox}_{\Vert \cdot\Vert_1},\text{prox}_{\Vert \cdot\Vert_2}$
+        From part (1)(a), we conclude that: 
+        $$
+        \delta_{\mathbb{B}_\infty}^*(x) = \delta_{\mathbb{B}_1}(x)
+        $$
+        From previous HW2 we gathered that: 
+        $$
+        \left(
+            \underset{1, \Vert \cdot\Vert_1}{\text{prox}}(y)
+        \right)_i
+        =
+        \begin{cases}
+            0 & y \in [-1, 1]
+            \\
+            y_i + 1 & y_i < -1
+            \\
+            y_i - 1 & y_i > 1
+        \end{cases}
+        $$
+        $$
+        \left(
+            \underset{1, \Vert \cdot\Vert_\infty}{\text{prox}}(y)
+        \right)_i
+        = 
+        \begin{cases}
+            y_i & y_i \in [-1, 1] \\
+            -1 & y_i < -1 \\
+            1 & y_i > 1
+        \end{cases}
+        $$
+        If I add them together, element-wise, each case matches each other, cancelling out, and then we just have the vector $y$. 
+        \\
+        For the second part, we need the prox with the $\Vert \cdot\Vert_2$, and the conjugate of $\Vert \cdot\Vert_2$ to verify. 
+        \\
+        From \hyperref[eqn:1b1]{1b1} we have: 
+        $$
+            (\delta_{\mathbb{B}_2}(x))^* = \Vert x\Vert_2
+        $$
+        From Previous HW we know that: 
+        $$
+        \underset{\Vert \cdot\Vert}{\text{prox}}(z) 
+        =
+        \begin{cases}
+            (\Vert z\Vert_2 - t)\widehat{z} & \Vert z\Vert_2 > t 
+            \\
+            \mathbf{0} & \Vert z\Vert_2 \le t
+        \end{cases}
+        $$
+        And the prox for the $\delta_{\mathbb{B}_2}$ is like: 
+        $$
+        \underset{\delta_{\mathbb{B}_2}}{\text{prox}}(z) = \underset{\mathbb{B}_2}{\text{proj}} (z)
+        = \begin{cases}
+            \widehat{z} & \Vert z\Vert_2 \ge 1
+            \\
+            z & \text{else}
+        \end{cases}
+        $$
+        Adding then case by case we have: 
+        $$
+        (\Vert z\Vert_2 - t)\widehat{z} + \widehat{z} = \Vert z\Vert_2 \widehat{z} = z \quad \mathbf{0} + z = z
+        $$
+        Under both cases, the identity is verified. 
+
+
+\section*{Problem (4)}
+    \subsection*{(a)}
+    
+
+    
+    
+    
+\end{document} 
